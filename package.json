@@ -1,0 +1,75 @@
+{
+  "name": "vscode-makefile-navigator",
+  "displayName": "Makefile Navigator",
+  "description": "Navigate symbols in Makefiles - jump to definitions and find references for targets and variables",
+  "version": "0.0.1",
+  "publisher": "zhumeme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhumeme/vscode-makefile-navigator"
+  },
+  "homepage": "https://github.com/zhumeme/vscode-makefile-navigator#readme",
+  "bugs": {
+    "url": "https://github.com/zhumeme/vscode-makefile-navigator/issues"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "makefile",
+    "make",
+    "navigation",
+    "symbol",
+    "definition",
+    "reference"
+  ],
+  "activationEvents": [
+    "onLanguage:makefile"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "makefile",
+        "aliases": [
+          "Makefile",
+          "makefile"
+        ],
+        "extensions": [
+          ".mk",
+          ".mak"
+        ],
+        "filenames": [
+          "Makefile",
+          "makefile",
+          "GNUmakefile"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^9.25.1",
+    "typescript": "^5.8.3",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
