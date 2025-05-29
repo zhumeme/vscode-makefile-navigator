@@ -2,8 +2,9 @@
   "name": "vscode-makefile-navigator",
   "displayName": "Makefile Navigator",
   "description": "Navigate symbols in Makefiles - jump to definitions and find references for targets and variables",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "zhumeme",
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/zhumeme/vscode-makefile-navigator"

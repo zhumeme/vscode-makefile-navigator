@@ -4,33 +4,33 @@ A Visual Studio Code extension that provides comprehensive language support for 
 
 ## Features
 
-- **跳转到定义 (Go to Definition)**: 在Makefile中点击目标(target)或变量名时，可以跳转到其定义位置
-- **查找引用 (Find References)**: 查找某个目标或变量在整个工作空间中的所有引用
-- **文档符号导航**: 在VS Code的大纲视图中显示Makefile中的所有目标和变量
-- **智能提示 (IntelliSense)**: 提供变量、目标和函数的自动完成建议
-- **悬停信息 (Hover)**: 鼠标悬停时显示变量值、目标依赖关系等详细信息
-- **诊断检查**: 检测常见的Makefile错误，如制表符与空格混用、未定义变量等
+- **Go to Definition**: Click on targets or variable names in Makefiles to jump to their definition location
+- **Find References**: Find all references of a target or variable throughout the entire workspace
+- **Document Symbol Navigation**: Display all targets and variables in Makefiles in VS Code's outline view
+- **IntelliSense**: Provide auto-completion suggestions for variables, targets, and functions
+- **Hover Information**: Show detailed information such as variable values and target dependencies when hovering
+- **Diagnostic Checks**: Detect common Makefile errors, such as mixed tabs and spaces, undefined variables, etc.
 
-## 支持的符号类型
+## Supported Symbol Types
 
-- **目标 (Targets)**: 如 `all:`, `clean:`, `install:` 等
-- **变量 (Variables)**: 如 `CC = gcc`, `CFLAGS = -Wall` 等
-- **变量引用**: 如 `$(CC)`, `$(CFLAGS)` 等
-- **模式规则**: 如 `%.o: %.c` 等
+- **Targets**: Such as `all:`, `clean:`, `install:`, etc.
+- **Variables**: Such as `CC = gcc`, `CFLAGS = -Wall`, etc.
+- **Variable References**: Such as `$(CC)`, `$(CFLAGS)`, etc.
+- **Pattern Rules**: Such as `%.o: %.c`, etc.
 
-## 使用方法
+## Usage
 
-1. 安装扩展
-2. 打开包含Makefile的项目
-3. 在Makefile中：
-   - 按住 `Ctrl/Cmd` 并点击符号名称可跳转到定义
-   - 右键点击符号选择"Go to Definition"或"Find All References"
-   - 使用 `Ctrl/Cmd + Shift + O` 查看文档符号大纲
-   - 输入 `$(` 自动触发变量名完成
-   - 在目标依赖位置输入时自动提示可用目标
-   - 悬停在变量或目标上查看详细信息
+1. Install the extension
+2. Open a project containing Makefiles
+3. In Makefiles:
+   - Hold `Ctrl/Cmd` and click on symbol names to jump to their definitions
+   - Right-click on symbols and select "Go to Definition" or "Find All References"
+   - Use `Ctrl/Cmd + Shift + O` to view document symbol outline
+   - Type `$(` to automatically trigger variable name completion
+   - Get automatic suggestions for available targets when typing in target dependency positions
+   - Hover over variables or targets to view detailed information
 
-## 支持的文件
+## Supported Files
 
 - `Makefile`
 - `makefile` 
@@ -38,9 +38,9 @@ A Visual Studio Code extension that provides comprehensive language support for 
 - `*.mk`
 - `*.mak`
 
-## 示例
+## Example
 
-在以下Makefile中：
+In the following Makefile:
 
 ```makefile
 CC = gcc
@@ -56,17 +56,17 @@ clean:
 	rm -f *.o myapp
 ```
 
-- 点击 `$(CC)` 会跳转到 `CC = gcc` 的定义
-- 在 `CC` 上查找引用会显示所有 `$(CC)` 的使用位置
-- 点击 `main.o` 会跳转到 `main.o:` 目标定义
+- Clicking `$(CC)` will jump to the `CC = gcc` definition
+- Finding references on `CC` will show all usage locations of `$(CC)`
+- Clicking `main.o` will jump to the `main.o:` target definition
 
-## 开发
+## Development
 
-要在本地开发和测试此扩展：
+To develop and test this extension locally:
 
-1. 克隆仓库
-2. 运行 `npm install`
-3. 按 `F5` 启动新的VS Code窗口进行测试
+1. Clone the repository
+2. Run `npm install`
+3. Press `F5` to launch a new VS Code window for testing
 
 ## License
 
