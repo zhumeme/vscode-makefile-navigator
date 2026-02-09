@@ -38,7 +38,7 @@ export class MakefileCompletionProvider implements vscode.CompletionItemProvider
         variables.forEach(variable => {
             const completion = new vscode.CompletionItem(variable.name, vscode.CompletionItemKind.Variable);
             completion.detail = 'User-defined variable';
-            completion.insertText = variable.name + ')';
+            completion.insertText = variable.name
             completions.push(completion);
         });
         
@@ -60,7 +60,7 @@ export class MakefileCompletionProvider implements vscode.CompletionItemProvider
         predefinedVars.forEach(variable => {
             const completion = new vscode.CompletionItem(variable.name, vscode.CompletionItemKind.Variable);
             completion.detail = variable.description;
-            completion.insertText = variable.name + ')';
+            completion.insertText = variable.name
             completions.push(completion);
         });
         
