@@ -15,7 +15,7 @@ export class MakefileCompletionProvider implements vscode.CompletionItemProvider
         
         // Check if we're in a variable reference $(...)
         if (beforeCursor.endsWith('$(') || /\$\([a-zA-Z_]*$/.test(beforeCursor)) {
-            return this.provideVariableCompletions(document);
+            return this.provideVariableCompletions(document, position);
         }
         
         // Check if we're in a dependency list (after colon)
@@ -28,9 +28,11 @@ export class MakefileCompletionProvider implements vscode.CompletionItemProvider
         return this.provideGeneralCompletions(document);
     }
 
-    private provideVariableCompletions(document: vscode.TextDocument): vscode.CompletionItem[] {
+    private provideVariableCompletions(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
         const symbols = MakefileParser.parseDocument(document);
         const variables = symbols.filter(s => s.kind === MakefileSymbolKind.Variable);
+        const line = document.lineAt(position.line).text;
+        const hasClosingParenAtCursor = line.charAt(position.character) === ')';
         
         const completions: vscode.CompletionItem[] = [];
         
@@ -38,7 +40,7 @@ export class MakefileCompletionProvider implements vscode.CompletionItemProvider
         variables.forEach(variable => {
             const completion = new vscode.CompletionItem(variable.name, vscode.CompletionItemKind.Variable);
             completion.detail = 'User-defined variable';
-            completion.insertText = variable.name + ')';
+            completion.insertText = hasClosingParenAtCursor ? variable.name : variable.name + ')';
             completions.push(completion);
         });
         
@@ -60,7 +62,7 @@ export class MakefileCompletionProvider implements vscode.CompletionItemProvider
         predefinedVars.forEach(variable => {
             const completion = new vscode.CompletionItem(variable.name, vscode.CompletionItemKind.Variable);
             completion.detail = variable.description;
-            completion.insertText = variable.name + ')';
+            completion.insertText = hasClosingParenAtCursor ? variable.name : variable.name + ')';
             completions.push(completion);
         });
         

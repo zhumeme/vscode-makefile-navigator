@@ -5,6 +5,72 @@ import { MakefileParser, MakefileSymbolKind } from '../makefileParser';
 // import { MakefileHoverProvider } from '../hoverProvider';
 // import { MakefileCompletionProvider } from '../completionProvider';
 
+const getFixturePath = (fileName: string): string =>
+    path.resolve(__dirname, '../../src/test/fixtures', fileName);
+
+const getCompletionLabel = (item: vscode.CompletionItem): string =>
+    typeof item.label === 'string' ? item.label : item.label.label;
+
+const getCompletionInsertText = (item: vscode.CompletionItem): string => {
+    if (typeof item.insertText === 'string') {
+        return item.insertText;
+    }
+
+    if (item.insertText instanceof vscode.SnippetString) {
+        return item.insertText.value;
+    }
+
+    return getCompletionLabel(item);
+};
+
+const getCompletionRange = (
+    item: vscode.CompletionItem,
+    document: vscode.TextDocument,
+    position: vscode.Position
+): vscode.Range => {
+    if (item.range instanceof vscode.Range) {
+        return item.range;
+    }
+
+    if (item.range && 'inserting' in item.range) {
+        return item.range.inserting;
+    }
+
+    return document.getWordRangeAtPosition(position) ?? new vscode.Range(position, position);
+};
+
+const previewAppliedCompletion = (
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    item: vscode.CompletionItem
+): string => {
+    const range = getCompletionRange(item, document, position);
+    const insertText = getCompletionInsertText(item);
+    const lineText = document.lineAt(position.line).text;
+
+    return lineText.slice(0, range.start.character) + insertText + lineText.slice(range.end.character);
+};
+
+const fetchCompletionByLabel = async (
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    label: string
+): Promise<vscode.CompletionItem> => {
+    const completionList = await vscode.commands.executeCommand<vscode.CompletionList>(
+        'vscode.executeCompletionItemProvider',
+        document.uri,
+        position,
+        '('
+    );
+
+    assert.ok(completionList, 'Completion list should be provided');
+
+    const completion = completionList?.items.find(item => getCompletionLabel(item) === label);
+    assert.ok(completion, `Should include ${label} completion`);
+
+    return completion!;
+};
+
 suite('Makefile Navigator Integration Tests', () => {
     
     test('Parse complex Makefile with many variables and targets', async () => {
@@ -108,6 +174,30 @@ target_with_underscores: \$(VAR_WITH_UNDERSCORES)
         Object.keys(targetCounts).forEach(name => {
             assert.strictEqual(targetCounts[name], 1, `Target ${name} should appear only once`);
         });
+    });
+
+    test('Disk-backed Makefile completion reuses an existing closing parenthesis', async () => {
+        const document = await vscode.workspace.openTextDocument(
+            getFixturePath('variable-completion-existing-paren.mk')
+        );
+
+        const position = new vscode.Position(4, 4);
+        const completion = await fetchCompletionByLabel(document, position, 'CC');
+        const appliedLine = previewAppliedCompletion(document, position, completion);
+
+        assert.strictEqual(appliedLine, '\t$(CC)');
+    });
+
+    test('Disk-backed Makefile completion appends a closing parenthesis when needed', async () => {
+        const document = await vscode.workspace.openTextDocument(
+            getFixturePath('variable-completion-missing-paren.mk')
+        );
+
+        const position = new vscode.Position(4, 4);
+        const completion = await fetchCompletionByLabel(document, position, 'CC');
+        const appliedLine = previewAppliedCompletion(document, position, completion);
+
+        assert.strictEqual(appliedLine, '\t$(CC)');
     });
 
     // Temporarily disabled - new features being added

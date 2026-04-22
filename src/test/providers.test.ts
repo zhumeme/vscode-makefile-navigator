@@ -96,6 +96,39 @@ test:
             assert.ok(labels.includes('CC'), 'Should complete CC variable');
             assert.ok(labels.includes('CFLAGS'), 'Should complete CFLAGS variable');
             assert.ok(labels.includes('LDFLAGS'), 'Should complete LDFLAGS variable');
+
+            const ccCompletion = completions.find(item => item.label === 'CC');
+            assert.strictEqual(ccCompletion?.insertText, 'CC)', 'Should append closing parenthesis when missing');
+        }
+    });
+
+    test('Completion Provider - Variable Completions With Existing Closing Parenthesis', async () => {
+        const completionProvider = new MakefileCompletionProvider();
+
+        const content = `CC = gcc
+CFLAGS = -Wall
+
+test:
+	$(C)`;
+
+        const document = await vscode.workspace.openTextDocument({
+            content: content,
+            language: 'makefile'
+        });
+
+        // Test completion inside $(C) after the variable prefix and before the existing closing parenthesis
+        const position = new vscode.Position(4, 4);
+        const completions = completionProvider.provideCompletionItems(
+            document,
+            position,
+            createCancellationToken(),
+            { triggerKind: vscode.CompletionTriggerKind.TriggerCharacter, triggerCharacter: '(' }
+        );
+
+        assert.ok(completions, 'Completions should be provided');
+        if (Array.isArray(completions)) {
+            const ccCompletion = completions.find(item => item.label === 'CC');
+            assert.strictEqual(ccCompletion?.insertText, 'CC', 'Should reuse the existing closing parenthesis');
         }
     });
 
