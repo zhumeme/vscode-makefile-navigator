@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.0.4] - 2026-08-24
+
+### Fixed
+- Avoid inserting a duplicate closing parenthesis when completing a Makefile variable reference that already contains `)`
+
+### Tests
+- Add coverage for variable completion with and without an existing closing parenthesis
+
 ## [0.0.1] - 2025-05-28
 
 ### Added
